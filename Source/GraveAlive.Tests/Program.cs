@@ -13,6 +13,7 @@ namespace GraveAlive.Tests
             {
                 SeedsLivingWorld();
                 EvolvesAutonomousSociety();
+                PlansVisibleSurvivorSpawns();
                 Console.WriteLine("All GraveAlive simulation checks passed.");
                 return 0;
             }
@@ -55,6 +56,25 @@ namespace GraveAlive.Tests
             Assert(runtime.World.Events.Any(evt => evt.Category == "gather"), "Expected gathering behavior.");
             Assert(runtime.World.Events.Any(evt => evt.Category == "relationship"), "Expected relationship behavior.");
             Assert(runtime.World.Events.Any(evt => evt.Category == "build"), "Expected building behavior.");
+        }
+
+        private static void PlansVisibleSurvivorSpawns()
+        {
+            SimulationSettings settings = new SimulationSettings
+            {
+                StartingSurvivorCount = 12,
+                MaxVisibleSurvivors = 4,
+                MaxSpawnRequestsPerTick = 4
+            };
+            GraveAliveRuntime runtime = new GraveAliveRuntime(settings, 42);
+
+            SurvivorSpawnRequest[] requests = runtime
+                .PlanVisibleSurvivorSpawns(new[] { new WorldPosition(1000, 0, 1000) })
+                .ToArray();
+
+            Assert(requests.Length > 0, "Expected visible survivor spawn requests near the player.");
+            Assert(requests.All(request => request.RequestType == SpawnRequestType.Spawn), "Expected initial requests to be spawns.");
+            Assert(requests.Length <= settings.MaxVisibleSurvivors, "Expected spawn requests to respect visible survivor limit.");
         }
 
         private static void Assert(bool condition, string message)

@@ -9,15 +9,21 @@ namespace GraveAlive
     {
         private readonly AiDirector _director;
         private readonly SimulationSettings _settings;
+        private readonly SurvivorSpawnCoordinator _spawnCoordinator;
         private float _accumulatedSeconds;
 
         public WorldState World { get; private set; }
+        public SurvivorSpawnCoordinator SpawnCoordinator
+        {
+            get { return _spawnCoordinator; }
+        }
 
         public GraveAliveRuntime(SimulationSettings settings, int seed)
         {
             _settings = settings ?? new SimulationSettings();
             World = new WorldState(new Random(seed));
             _director = new AiDirector(_settings);
+            _spawnCoordinator = new SurvivorSpawnCoordinator(_settings);
             SeedSurvivors();
             PrimeRelationships();
             World.Record(null, "system", "GraveAlive initialized: " + World.Snapshot());
@@ -43,6 +49,41 @@ namespace GraveAlive
             _director.Advance(World, ticks);
         }
 
+        public IReadOnlyList<SurvivorSpawnRequest> PlanVisibleSurvivorSpawns(IEnumerable<WorldPosition> playerPositions)
+        {
+            return _spawnCoordinator.Plan(World, playerPositions);
+        }
+
+        public void MarkSpawnSucceeded(Guid survivorId, int entityId)
+        {
+            SurvivorNpc survivor = World.GetSurvivor(survivorId);
+            _spawnCoordinator.MarkSpawnSucceeded(survivorId, entityId, World.Tick);
+            World.Record(
+                survivorId,
+                "spawn",
+                (survivor == null ? "A survivor" : survivor.Name) + " became visible in the world as entity " + entityId + ".");
+        }
+
+        public void MarkSpawnFailed(Guid survivorId, string reason)
+        {
+            SurvivorNpc survivor = World.GetSurvivor(survivorId);
+            _spawnCoordinator.MarkSpawnFailed(survivorId);
+            World.Record(
+                survivorId,
+                "spawn",
+                (survivor == null ? "A survivor" : survivor.Name) + " could not spawn: " + reason + ".");
+        }
+
+        public void MarkDespawnSucceeded(Guid survivorId)
+        {
+            SurvivorNpc survivor = World.GetSurvivor(survivorId);
+            _spawnCoordinator.MarkDespawnSucceeded(survivorId);
+            World.Record(
+                survivorId,
+                "despawn",
+                (survivor == null ? "A survivor" : survivor.Name) + " returned to background simulation.");
+        }
+
         public string Summary()
         {
             BehaviorEvent lastEvent = World.Events.LastOrDefault();
@@ -58,6 +99,7 @@ namespace GraveAlive
                     Guid.NewGuid(),
                     NameGenerator.SurvivorName(World.Random, i),
                     TraitProfile.Randomized(World.Random));
+                survivor.Position = StartingPositionFor(i);
 
                 survivor.Inventory.Add(ResourceKind.Food, 2 + World.Random.Next(1, 5));
                 survivor.Inventory.Add(ResourceKind.Wood, 18 + World.Random.Next(0, 18));
@@ -71,6 +113,7 @@ namespace GraveAlive
                 }
 
                 World.AddSurvivor(survivor);
+                _spawnCoordinator.GetOrCreateState(survivor);
             }
         }
 
@@ -88,6 +131,15 @@ namespace GraveAlive
                     }
                 }
             }
+        }
+
+        private WorldPosition StartingPositionFor(int index)
+        {
+            float ring = index < 4 ? 35f : 90f + (index % 4) * 35f;
+            double angle = (Math.PI * 2.0 * index) / Math.Max(1, _settings.StartingSurvivorCount);
+            float x = (float)(Math.Cos(angle) * ring);
+            float z = (float)(Math.Sin(angle) * ring);
+            return new WorldPosition(x, 0, z);
         }
     }
 }

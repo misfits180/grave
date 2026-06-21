@@ -27,6 +27,9 @@ Implemented in `Source/GraveAlive/Simulation`:
   socialize.
 - Faction creation from high-trust relationship clusters.
 - Camp/base creation and improvement.
+- Survivor world positions and visibility state.
+- Spawn planning that stages nearby simulated survivors around active players,
+  respects a maximum visible survivor count, and creates spawn/despawn requests.
 - Behavior event log for debugging and future in-game display.
 
 Implemented in `Source/GraveAlive/GameIntegration`:
@@ -34,6 +37,10 @@ Implemented in `Source/GraveAlive/GameIntegration`:
 - Conditional `IModApi` entry point.
 - Harmony patch against the game update loop.
 - Periodic log summary of the living-world simulation.
+- First-pass visible survivor spawner that tries the standard
+  `EntityFactory.CreateEntity` plus `World.SpawnEntityInWorld` flow.
+- Reflection-based player/world/entity lookup so minor 7D2D method changes are
+  easier to patch after a local compile/test.
 
 ## Integration phases
 
@@ -46,11 +53,18 @@ Implemented in `Source/GraveAlive/GameIntegration`:
 
 ### Phase 2: Survivor entity spawning
 
-- Identify the safest vanilla survivor-like entity template or add a new entity
-  class through XML.
+- Use `Config/entitygroups.xml` to define the `GraveAliveSurvivors` group from
+  vanilla survivor-like entity names.
+- Stage a limited first wave of simulated survivors around active players.
+- Create visible entities through the game-world spawn adapter.
 - Add spawn rules for wilderness, roads, POI edges, and faction camps.
 - Map each `SurvivorNpc.Id` to an in-world entity id.
 - Despawn distant survivors back into simulation state to protect performance.
+
+Current status: the planning and first adapter code are implemented. The next
+step is a local 7D2D compile/play-test to verify the exact entity group,
+`EntityFactory`, player-list, spawn, and remove methods for the installed game
+version.
 
 ### Phase 3: AI action adapters
 

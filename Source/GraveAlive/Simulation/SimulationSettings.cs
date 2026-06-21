@@ -9,6 +9,12 @@ namespace GraveAlive.Simulation
         public int TradeSurplusThreshold { get; set; }
         public int SettlementWoodCost { get; set; }
         public int SettlementStoneCost { get; set; }
+        public int MaxVisibleSurvivors { get; set; }
+        public int MaxSpawnRequestsPerTick { get; set; }
+        public float SpawnRadius { get; set; }
+        public float DespawnRadius { get; set; }
+        public string SurvivorEntityClassName { get; set; }
+        public string SurvivorEntityGroupName { get; set; }
 
         public SimulationSettings()
         {
@@ -19,6 +25,12 @@ namespace GraveAlive.Simulation
             TradeSurplusThreshold = 12;
             SettlementWoodCost = 20;
             SettlementStoneCost = 10;
+            MaxVisibleSurvivors = 6;
+            MaxSpawnRequestsPerTick = 2;
+            SpawnRadius = 75f;
+            DespawnRadius = 125f;
+            SurvivorEntityClassName = "npcSurvivorRanged";
+            SurvivorEntityGroupName = "GraveAliveSurvivors";
         }
     }
 }

@@ -10,6 +10,8 @@ The current repository contains:
   crafting, trading, patrols, and behavior logging.
 - A conditional 7D2D `IModApi` / Harmony entry point in
   `Source/GraveAlive/GameIntegration/ModApi.cs`.
+- A visible-survivor spawn planner and cautious game-side spawn adapter that can
+  request nearby survivor entities without flooding the world.
 - A small XML quality-of-life patch that raises `resourceWood` stack size to
   `10000`.
 
@@ -33,12 +35,15 @@ game assemblies are available.
   - socialize and strengthen or damage relationships.
 - Recent behavior events are retained for debugging and future in-game UI/log
   output.
+- Nearby simulated survivors can now be staged near active players and converted
+  into visible survivor entity spawn requests.
 
 ## Repository layout
 
 ```text
 grave/
 ├── Config/
+│   ├── entitygroups.xml
 │   └── items.xml
 ├── Source/
 │   ├── GraveAlive/
@@ -71,6 +76,10 @@ grave/
 The XML patch will load without a DLL. The living-world NPC behavior requires
 building and installing `GraveAlive.dll`.
 
+`Config/entitygroups.xml` defines the `GraveAliveSurvivors` entity group used by
+the C# spawner. It references vanilla survivor-style entity names first, so this
+step does not add custom models.
+
 ## Building the code mod
 
 7 Days to Die code mods require the game's managed assemblies and EAC disabled.
@@ -88,6 +97,7 @@ log for:
 
 ```text
 [GraveAlive] Living-world simulation initialized.
+[GraveAlive] Spawned survivor ...
 ```
 
 ## Testing the simulation core
@@ -100,7 +110,11 @@ dotnet run --project Source/GraveAlive.Tests/GraveAlive.Tests.csproj
 
 ## Important limitation
 
-The current code advances an autonomous survivor society simulation and exposes
-a Harmony update hook. Actual in-world entity spawning, POI claiming, block
-placement, NPC pathing, and trader-dialog integration still need to be wired
-against verified 7D2D 1.x `Assembly-CSharp.dll` method signatures.
+The current code advances an autonomous survivor society simulation, plans which
+survivors should become visible near players, and includes a first game-side
+adapter for spawning those survivor entities. The adapter still needs to be
+compiled and tested against an installed 7D2D build because entity/player/world
+method names can change between game versions.
+
+POI claiming, actual block placement, advanced NPC pathing, and trader-dialog
+integration are still future steps.

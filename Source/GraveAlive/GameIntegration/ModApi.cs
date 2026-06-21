@@ -9,10 +9,13 @@ namespace GraveAlive.GameIntegration
     public sealed class ModApi : IModApi
     {
         internal static GraveAliveRuntime Runtime { get; private set; }
+        internal static VisibleSurvivorSpawner Spawner { get; private set; }
 
         public void InitMod(Mod modInstance)
         {
-            Runtime = new GraveAliveRuntime(new SimulationSettings(), System.Environment.TickCount);
+            SimulationSettings settings = new SimulationSettings();
+            Runtime = new GraveAliveRuntime(settings, System.Environment.TickCount);
+            Spawner = new VisibleSurvivorSpawner(settings);
 
             Harmony harmony = new Harmony("com.cursor.gravealive");
             harmony.PatchAll(Assembly.GetExecutingAssembly());
@@ -34,15 +37,16 @@ namespace GraveAlive.GameIntegration
             }
 
             ModApi.Runtime.Update(Time.deltaTime);
+            if (ModApi.Spawner != null)
+            {
+                ModApi.Spawner.Process(ModApi.Runtime);
+            }
 
             if (Time.realtimeSinceStartup - _lastReportTime > 60f)
             {
                 _lastReportTime = Time.realtimeSinceStartup;
                 Log.Out("[GraveAlive] " + ModApi.Runtime.Summary());
             }
-
-            // Game entity spawning, POI claiming, and block placement should be wired here
-            // after verifying exact 7D2D 1.x method signatures against Assembly-CSharp.dll.
         }
     }
 }

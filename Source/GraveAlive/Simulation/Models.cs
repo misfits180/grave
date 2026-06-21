@@ -234,6 +234,7 @@ namespace GraveAlive.Simulation
         public Inventory Inventory { get; private set; }
         public Guid? FactionId { get; set; }
         public Guid? HomeSettlementId { get; set; }
+        public WorldPosition Position { get; set; }
         public int CraftingSkill { get; private set; }
         public int BuildingSkill { get; private set; }
         public int CombatSkill { get; private set; }
@@ -246,6 +247,7 @@ namespace GraveAlive.Simulation
             Traits = traits;
             Needs = new Needs(70, 60, 55, 55);
             Inventory = new Inventory();
+            Position = new WorldPosition(0, 0, 0);
             CraftingSkill = traits.Crafting;
             BuildingSkill = traits.Building;
             CombatSkill = (traits.Bravery + traits.Aggression) / 2;
