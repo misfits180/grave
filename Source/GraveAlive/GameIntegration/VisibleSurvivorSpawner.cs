@@ -85,7 +85,7 @@ namespace GraveAlive.GameIntegration
 
             int entityId = ReadInt(entity, "entityId", "EntityId");
             runtime.MarkSpawnSucceeded(request.SurvivorId, entityId);
-            Log.Out("[GraveAlive] Spawned survivor " + request.SurvivorName + " near player as " + request.EntityClassName + ".");
+            GameLog.Out("[GraveAlive] Spawned survivor " + request.SurvivorName + " near player as " + request.EntityClassName + ".");
         }
 
         private static MethodInfo ResolveCreateEntityMethod(Type entityCreationDataType)
@@ -132,7 +132,7 @@ namespace GraveAlive.GameIntegration
             }
 
             runtime.MarkDespawnSucceeded(request.SurvivorId);
-            Log.Out("[GraveAlive] Returned survivor " + request.SurvivorName + " to background simulation.");
+            GameLog.Out("[GraveAlive] Returned survivor " + request.SurvivorName + " to background simulation.");
         }
 
         private IReadOnlyList<WorldPosition> GetPlayerPositions()

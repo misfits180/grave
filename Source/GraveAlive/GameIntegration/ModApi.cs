@@ -25,8 +25,8 @@ namespace GraveAlive.GameIntegration
             Harmony harmony = new Harmony("com.cursor.gravealive");
             harmony.PatchAll(Assembly.GetExecutingAssembly());
 
-            Log.Out("[GraveAlive] Living-world simulation initialized.");
-            Log.Out("[GraveAlive] Save file: " + SavePath);
+            GameLog.Out("[GraveAlive] Living-world simulation initialized.");
+            GameLog.Out("[GraveAlive] Save file: " + SavePath);
         }
 
         internal static void SaveNow(string reason)
@@ -39,11 +39,11 @@ namespace GraveAlive.GameIntegration
             try
             {
                 Runtime.Save(SavePath);
-                Log.Out("[GraveAlive] Saved living-world state (" + reason + ").");
+                GameLog.Out("[GraveAlive] Saved living-world state (" + reason + ").");
             }
             catch (Exception exception)
             {
-                Log.Out("[GraveAlive] Failed to save living-world state: " + exception.Message);
+                GameLog.Out("[GraveAlive] Failed to save living-world state: " + exception.Message);
             }
         }
 
@@ -106,7 +106,7 @@ namespace GraveAlive.GameIntegration
             if (Time.realtimeSinceStartup - _lastReportTime > 60f)
             {
                 _lastReportTime = Time.realtimeSinceStartup;
-                Log.Out("[GraveAlive] " + ModApi.Runtime.Summary());
+                GameLog.Out("[GraveAlive] " + ModApi.Runtime.Summary());
             }
         }
     }

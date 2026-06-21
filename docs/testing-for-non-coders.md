@@ -3,6 +3,14 @@
 This guide explains what to check after somebody builds the `GraveAlive.dll`
 file for you.
 
+If you have a built file at:
+
+```text
+build/GraveAlive.dll
+```
+
+copy that file into your mod folder before starting the game.
+
 ## Before starting the game
 
 Your mod folder should look like this:

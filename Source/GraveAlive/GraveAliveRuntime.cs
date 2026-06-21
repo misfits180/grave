@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GraveAlive.Simulation;
+using SimWorldState = GraveAlive.Simulation.WorldState;
 
 namespace GraveAlive
 {
@@ -13,7 +14,7 @@ namespace GraveAlive
         private float _accumulatedSeconds;
         private long _lastSavedTick = -1;
 
-        public WorldState World { get; private set; }
+        public SimWorldState World { get; private set; }
         public SurvivorSpawnCoordinator SpawnCoordinator
         {
             get { return _spawnCoordinator; }
@@ -22,7 +23,7 @@ namespace GraveAlive
         public GraveAliveRuntime(SimulationSettings settings, int seed)
         {
             _settings = settings ?? new SimulationSettings();
-            World = new WorldState(new Random(seed));
+            World = new SimWorldState(new Random(seed));
             _director = new AiDirector(_settings);
             _spawnCoordinator = new SurvivorSpawnCoordinator(_settings);
             SeedSurvivors();
@@ -30,7 +31,7 @@ namespace GraveAlive
             World.Record(null, "system", "GraveAlive initialized: " + World.Snapshot());
         }
 
-        private GraveAliveRuntime(SimulationSettings settings, WorldState world, SurvivorSpawnCoordinator spawnCoordinator)
+        private GraveAliveRuntime(SimulationSettings settings, SimWorldState world, SurvivorSpawnCoordinator spawnCoordinator)
         {
             _settings = settings ?? new SimulationSettings();
             World = world;

@@ -113,12 +113,31 @@ log for:
 
 For a plain-English checklist, see `docs/testing-for-non-coders.md`.
 
+If you are using Mono on Linux/macOS, or this cloud environment, you can also
+build with:
+
+```bash
+./scripts/build-game-mod.sh "/path/to/7 Days To Die/7DaysToDie_Data/Managed"
+```
+
+That writes:
+
+```text
+build/GraveAlive.dll
+```
+
 ## Testing the simulation core
 
 The test project does not require 7D2D assemblies:
 
 ```bash
 dotnet run --project Source/GraveAlive.Tests/GraveAlive.Tests.csproj
+```
+
+Or with Mono:
+
+```bash
+./scripts/test-simulation.sh
 ```
 
 ## Important limitation

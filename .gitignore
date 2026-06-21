@@ -1,0 +1,9 @@
+build/
+bin/
+obj/
+Saves/
+*.dll
+*.exe
+*.pdb
+*.mdb
+*.zip
