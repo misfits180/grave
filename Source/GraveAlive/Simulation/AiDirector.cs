@@ -147,9 +147,11 @@ namespace GraveAlive.Simulation
         private void Craft(WorldState world, SurvivorNpc survivor)
         {
             if (survivor.Inventory.Get(ResourceKind.Tools) == 0 &&
-                survivor.Inventory.Remove(ResourceKind.Wood, 4) &&
-                survivor.Inventory.Remove(ResourceKind.Stone, 3))
+                survivor.Inventory.Has(ResourceKind.Wood, 4) &&
+                survivor.Inventory.Has(ResourceKind.Stone, 3))
             {
+                survivor.Inventory.Remove(ResourceKind.Wood, 4);
+                survivor.Inventory.Remove(ResourceKind.Stone, 3);
                 survivor.Inventory.Add(ResourceKind.Tools, 1);
                 survivor.Needs.Change(0, 2, 0, 5);
                 world.Record(survivor.Id, "craft", survivor.Name + " made a survival tool.");
@@ -157,9 +159,11 @@ namespace GraveAlive.Simulation
             }
 
             if (survivor.Inventory.Get(ResourceKind.Weapons) == 0 &&
-                survivor.Inventory.Remove(ResourceKind.Iron, 4) &&
-                survivor.Inventory.Remove(ResourceKind.Wood, 2))
+                survivor.Inventory.Has(ResourceKind.Iron, 4) &&
+                survivor.Inventory.Has(ResourceKind.Wood, 2))
             {
+                survivor.Inventory.Remove(ResourceKind.Iron, 4);
+                survivor.Inventory.Remove(ResourceKind.Wood, 2);
                 survivor.Inventory.Add(ResourceKind.Weapons, 1);
                 survivor.Needs.Change(0, 5, 0, 4);
                 world.Record(survivor.Id, "craft", survivor.Name + " assembled a weapon.");
@@ -167,9 +171,11 @@ namespace GraveAlive.Simulation
             }
 
             if (survivor.Inventory.Get(ResourceKind.Armor) == 0 &&
-                survivor.Inventory.Remove(ResourceKind.Cloth, 5) &&
-                survivor.Inventory.Remove(ResourceKind.Iron, 2))
+                survivor.Inventory.Has(ResourceKind.Cloth, 5) &&
+                survivor.Inventory.Has(ResourceKind.Iron, 2))
             {
+                survivor.Inventory.Remove(ResourceKind.Cloth, 5);
+                survivor.Inventory.Remove(ResourceKind.Iron, 2);
                 survivor.Inventory.Add(ResourceKind.Armor, 1);
                 survivor.Needs.Change(0, 7, 0, 3);
                 world.Record(survivor.Id, "craft", survivor.Name + " stitched together armor.");
@@ -184,13 +190,15 @@ namespace GraveAlive.Simulation
 
             if (settlement == null)
             {
-                if (!survivor.Inventory.Remove(ResourceKind.Wood, _settings.SettlementWoodCost) ||
-                    !survivor.Inventory.Remove(ResourceKind.Stone, _settings.SettlementStoneCost))
+                if (!survivor.Inventory.Has(ResourceKind.Wood, _settings.SettlementWoodCost) ||
+                    !survivor.Inventory.Has(ResourceKind.Stone, _settings.SettlementStoneCost))
                 {
                     Gather(world, survivor);
                     return;
                 }
 
+                survivor.Inventory.Remove(ResourceKind.Wood, _settings.SettlementWoodCost);
+                survivor.Inventory.Remove(ResourceKind.Stone, _settings.SettlementStoneCost);
                 settlement = new Settlement(Guid.NewGuid(), NameGenerator.SettlementName(world.Random), SettlementKind.Camp);
                 settlement.Improve(5 + survivor.BuildingSkill / 12, 4, survivor.CraftingSkill > 55 ? 1 : 0);
                 world.AddSettlement(settlement);
@@ -208,8 +216,10 @@ namespace GraveAlive.Simulation
                 return;
             }
 
-            if (survivor.Inventory.Remove(ResourceKind.Wood, 6) && survivor.Inventory.Remove(ResourceKind.Stone, 4))
+            if (survivor.Inventory.Has(ResourceKind.Wood, 6) && survivor.Inventory.Has(ResourceKind.Stone, 4))
             {
+                survivor.Inventory.Remove(ResourceKind.Wood, 6);
+                survivor.Inventory.Remove(ResourceKind.Stone, 4);
                 int defenseGain = 2 + survivor.BuildingSkill / 15;
                 int comfortGain = survivor.Traits.Compassion > 55 ? 2 : 1;
                 int workshopGain = survivor.CraftingSkill > 70 && world.Random.Next(100) < 25 ? 1 : 0;
@@ -240,11 +250,13 @@ namespace GraveAlive.Simulation
                 return;
             }
 
-            if (!survivor.Inventory.Remove(offered.Value, 2) || !partner.Inventory.Remove(needed, 1))
+            if (!survivor.Inventory.Has(offered.Value, 2) || !partner.Inventory.Has(needed, 1))
             {
                 return;
             }
 
+            survivor.Inventory.Remove(offered.Value, 2);
+            partner.Inventory.Remove(needed, 1);
             survivor.Inventory.Add(needed, 1);
             partner.Inventory.Add(offered.Value, 2);
             survivor.Needs.Change(2, 1, 3, 2);

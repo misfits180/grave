@@ -160,6 +160,11 @@ namespace GraveAlive.Simulation
             return _items.TryGetValue(kind, out value) ? value : 0;
         }
 
+        public bool Has(ResourceKind kind, int amount)
+        {
+            return Get(kind) >= amount;
+        }
+
         public void Add(ResourceKind kind, int amount)
         {
             if (amount <= 0)
