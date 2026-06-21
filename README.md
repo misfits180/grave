@@ -12,6 +12,8 @@ The current repository contains:
   `Source/GraveAlive/GameIntegration/ModApi.cs`.
 - A visible-survivor spawn planner and cautious game-side spawn adapter that can
   request nearby survivor entities without flooding the world.
+- XML entity definitions for a named `Grave Alive Survivor` that reuses vanilla
+  survivor behavior and art.
 - A small XML quality-of-life patch that raises `resourceWood` stack size to
   `10000`.
 
@@ -43,6 +45,7 @@ game assemblies are available.
 ```text
 grave/
 ├── Config/
+│   ├── entityclasses.xml
 │   ├── entitygroups.xml
 │   └── items.xml
 ├── Source/
@@ -51,7 +54,8 @@ grave/
 │   │   └── Simulation/
 │   └── GraveAlive.Tests/
 ├── docs/
-│   └── living-world-roadmap.md
+│   ├── living-world-roadmap.md
+│   └── testing-for-non-coders.md
 ├── ModInfo.xml
 └── README.md
 ```
@@ -68,17 +72,19 @@ grave/
    └── Mods/
        └── grave/
            ├── ModInfo.xml
-           ├── Config/
-           │   └── items.xml
+          ├── Config/
+          │   ├── entityclasses.xml
+          │   ├── entitygroups.xml
+          │   └── items.xml
            └── Source/
    ```
 
 The XML patch will load without a DLL. The living-world NPC behavior requires
 building and installing `GraveAlive.dll`.
 
-`Config/entitygroups.xml` defines the `GraveAliveSurvivors` entity group used by
-the C# spawner. It references vanilla survivor-style entity names first, so this
-step does not add custom models.
+`Config/entityclasses.xml` and `Config/entitygroups.xml` define the named
+`Grave Alive Survivor` used by the C# spawner. The entity extends vanilla
+survivor behavior/art, so this step does not add custom models.
 
 ## Building the code mod
 
@@ -99,6 +105,8 @@ log for:
 [GraveAlive] Living-world simulation initialized.
 [GraveAlive] Spawned survivor ...
 ```
+
+For a plain-English checklist, see `docs/testing-for-non-coders.md`.
 
 ## Testing the simulation core
 

@@ -15,6 +15,7 @@ namespace GraveAlive.Simulation
         public float DespawnRadius { get; set; }
         public string SurvivorEntityClassName { get; set; }
         public string SurvivorEntityGroupName { get; set; }
+        public int SpawnRetryDelayTicks { get; set; }
 
         public SimulationSettings()
         {
@@ -29,8 +30,9 @@ namespace GraveAlive.Simulation
             MaxSpawnRequestsPerTick = 2;
             SpawnRadius = 75f;
             DespawnRadius = 125f;
-            SurvivorEntityClassName = "npcSurvivorRanged";
+            SurvivorEntityClassName = "graveAliveSurvivorRanged";
             SurvivorEntityGroupName = "GraveAliveSurvivors";
+            SpawnRetryDelayTicks = 6;
         }
     }
 }

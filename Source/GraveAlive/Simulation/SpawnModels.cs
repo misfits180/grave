@@ -24,6 +24,8 @@ namespace GraveAlive.Simulation
         public SurvivorVisibilityState VisibilityState { get; private set; }
         public long LastRequestTick { get; private set; }
         public long LastVisibleTick { get; private set; }
+        public long LastFailureTick { get; private set; }
+        public int FailedAttempts { get; private set; }
 
         public SurvivorSpawnState(Guid survivorId, string entityClassName)
         {
@@ -32,6 +34,7 @@ namespace GraveAlive.Simulation
             VisibilityState = SurvivorVisibilityState.Simulated;
             LastRequestTick = -1;
             LastVisibleTick = -1;
+            LastFailureTick = -1;
         }
 
         public bool IsVisibleOrPending
@@ -54,6 +57,8 @@ namespace GraveAlive.Simulation
             EntityId = entityId;
             VisibilityState = SurvivorVisibilityState.Visible;
             LastVisibleTick = tick;
+            FailedAttempts = 0;
+            LastFailureTick = -1;
         }
 
         public void MarkDespawnRequested(long tick)
@@ -66,6 +71,18 @@ namespace GraveAlive.Simulation
         {
             EntityId = null;
             VisibilityState = SurvivorVisibilityState.Simulated;
+        }
+
+        public void MarkFailed(long tick)
+        {
+            MarkSimulated();
+            FailedAttempts++;
+            LastFailureTick = tick;
+        }
+
+        public bool IsCoolingDown(long currentTick, int retryDelayTicks)
+        {
+            return LastFailureTick >= 0 && currentTick - LastFailureTick < retryDelayTicks;
         }
     }
 

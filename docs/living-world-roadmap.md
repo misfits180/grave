@@ -30,6 +30,7 @@ Implemented in `Source/GraveAlive/Simulation`:
 - Survivor world positions and visibility state.
 - Spawn planning that stages nearby simulated survivors around active players,
   respects a maximum visible survivor count, and creates spawn/despawn requests.
+- Spawn failure cooldowns to avoid repeating a bad spawn attempt every frame.
 - Behavior event log for debugging and future in-game display.
 
 Implemented in `Source/GraveAlive/GameIntegration`:
@@ -41,6 +42,8 @@ Implemented in `Source/GraveAlive/GameIntegration`:
   `EntityFactory.CreateEntity` plus `World.SpawnEntityInWorld` flow.
 - Reflection-based player/world/entity lookup so minor 7D2D method changes are
   easier to patch after a local compile/test.
+- Log summaries that include visible, pending, cooling-down, and background
+  simulated survivor counts.
 
 ## Integration phases
 
@@ -54,7 +57,9 @@ Implemented in `Source/GraveAlive/GameIntegration`:
 ### Phase 2: Survivor entity spawning
 
 - Use `Config/entitygroups.xml` to define the `GraveAliveSurvivors` group from
-  vanilla survivor-like entity names.
+  a named `graveAliveSurvivorRanged` entity class.
+- Use `Config/entityclasses.xml` to define `graveAliveSurvivorRanged` by
+  extending vanilla survivor behavior/art.
 - Stage a limited first wave of simulated survivors around active players.
 - Create visible entities through the game-world spawn adapter.
 - Add spawn rules for wilderness, roads, POI edges, and faction camps.

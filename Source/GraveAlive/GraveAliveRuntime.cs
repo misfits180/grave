@@ -67,7 +67,7 @@ namespace GraveAlive
         public void MarkSpawnFailed(Guid survivorId, string reason)
         {
             SurvivorNpc survivor = World.GetSurvivor(survivorId);
-            _spawnCoordinator.MarkSpawnFailed(survivorId);
+            _spawnCoordinator.MarkSpawnFailed(survivorId, World.Tick);
             World.Record(
                 survivorId,
                 "spawn",
@@ -88,7 +88,7 @@ namespace GraveAlive
         {
             BehaviorEvent lastEvent = World.Events.LastOrDefault();
             string lastMessage = lastEvent == null ? "none" : lastEvent.Category + ": " + lastEvent.Message;
-            return World.Snapshot() + ", lastEvent=" + lastMessage;
+            return World.Snapshot() + ", " + _spawnCoordinator.Summary(World.Tick) + ", lastEvent=" + lastMessage;
         }
 
         private void SeedSurvivors()

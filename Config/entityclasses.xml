@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configs>
+    <!--
+        A named survivor entry for the C# spawner. This reuses vanilla survivor
+        behavior/art through npcSurvivorRanged, so the mod does not add custom
+        models or textures.
+    -->
+    <append xpath="/entity_classes">
+        <entity_class name="graveAliveSurvivorRanged" extends="npcSurvivorRanged">
+            <property name="DisplayName" value="Grave Alive Survivor" />
+            <property name="Tags" value="entity,human,npc,graveAliveSurvivor" />
+        </entity_class>
+    </append>
+</configs>

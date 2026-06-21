@@ -14,6 +14,7 @@ namespace GraveAlive.Tests
                 SeedsLivingWorld();
                 EvolvesAutonomousSociety();
                 PlansVisibleSurvivorSpawns();
+                AppliesSpawnRetryCooldown();
                 Console.WriteLine("All GraveAlive simulation checks passed.");
                 return 0;
             }
@@ -75,6 +76,27 @@ namespace GraveAlive.Tests
             Assert(requests.Length > 0, "Expected visible survivor spawn requests near the player.");
             Assert(requests.All(request => request.RequestType == SpawnRequestType.Spawn), "Expected initial requests to be spawns.");
             Assert(requests.Length <= settings.MaxVisibleSurvivors, "Expected spawn requests to respect visible survivor limit.");
+        }
+
+        private static void AppliesSpawnRetryCooldown()
+        {
+            SimulationSettings settings = new SimulationSettings
+            {
+                StartingSurvivorCount = 4,
+                MaxVisibleSurvivors = 2,
+                MaxSpawnRequestsPerTick = 2,
+                SpawnRetryDelayTicks = 5
+            };
+            GraveAliveRuntime runtime = new GraveAliveRuntime(settings, 99);
+            WorldPosition[] playerPositions = { new WorldPosition(500, 0, 500) };
+
+            SurvivorSpawnRequest first = runtime.PlanVisibleSurvivorSpawns(playerPositions).First();
+            runtime.MarkSpawnFailed(first.SurvivorId, "test failure");
+
+            SurvivorSpawnRequest[] immediateRetryRequests = runtime.PlanVisibleSurvivorSpawns(playerPositions).ToArray();
+            Assert(
+                immediateRetryRequests.All(request => request.SurvivorId != first.SurvivorId),
+                "Expected failed survivor spawn to wait before retrying.");
         }
 
         private static void Assert(bool condition, string message)

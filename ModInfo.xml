@@ -2,7 +2,7 @@
 <xml>
     <Name value="grave" />
     <DisplayName value="Grave Alive" />
-    <Version value="0.3.0" />
-    <Description value="Adds autonomous survivor simulation plus first-pass visible survivor spawning." />
+    <Version value="0.3.1" />
+    <Description value="Adds safer visible survivor spawning with named Grave Alive survivor entities." />
     <Author value="Cursor" />
 </xml>

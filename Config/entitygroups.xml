@@ -3,8 +3,7 @@
     <!-- Used by the C# spawn adapter when making simulated survivors visible. -->
     <append xpath="/entitygroups">
         <entitygroup name="GraveAliveSurvivors">
-            <entity name="npcSurvivorRanged" prob="0.75" />
-            <entity name="npcSurvivorTemplate" prob="0.25" />
+            <entity name="graveAliveSurvivorRanged" prob="1" />
         </entitygroup>
     </append>
 </configs>

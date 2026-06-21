@@ -81,6 +81,7 @@ namespace GraveAlive.Simulation
                 {
                     SurvivorSpawnState state = GetOrCreateState(survivor);
                     return state.VisibilityState == SurvivorVisibilityState.Simulated &&
+                        !state.IsCoolingDown(world.Tick, _settings.SpawnRetryDelayTicks) &&
                         NearestDistanceSquared(survivor.Position, players) <= spawnRadiusSquared;
                 })
                 .OrderBy(survivor => NearestDistanceSquared(survivor.Position, players))
@@ -143,12 +144,12 @@ namespace GraveAlive.Simulation
             }
         }
 
-        public void MarkSpawnFailed(Guid survivorId)
+        public void MarkSpawnFailed(Guid survivorId, long tick)
         {
             SurvivorSpawnState state;
             if (_states.TryGetValue(survivorId, out state))
             {
-                state.MarkSimulated();
+                state.MarkFailed(tick);
             }
         }
 
@@ -159,6 +160,23 @@ namespace GraveAlive.Simulation
             {
                 state.MarkSimulated();
             }
+        }
+
+        public string Summary(long currentTick)
+        {
+            int visible = _states.Values.Count(state => state.VisibilityState == SurvivorVisibilityState.Visible);
+            int pending = _states.Values.Count(state => state.VisibilityState == SurvivorVisibilityState.SpawnRequested);
+            int despawnPending = _states.Values.Count(state => state.VisibilityState == SurvivorVisibilityState.DespawnRequested);
+            int coolingDown = _states.Values.Count(state => state.IsCoolingDown(currentTick, _settings.SpawnRetryDelayTicks));
+            int simulated = _states.Values.Count(state => state.VisibilityState == SurvivorVisibilityState.Simulated);
+
+            return string.Format(
+                "spawn visible={0}, spawnPending={1}, despawnPending={2}, coolingDown={3}, simulated={4}",
+                visible,
+                pending,
+                despawnPending,
+                coolingDown,
+                simulated);
         }
 
         private IReadOnlyList<SurvivorSpawnRequest> LimitRequests(List<SurvivorSpawnRequest> requests)
