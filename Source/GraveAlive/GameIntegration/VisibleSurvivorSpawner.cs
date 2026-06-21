@@ -164,6 +164,12 @@ namespace GraveAlive.GameIntegration
 
         private int ResolveEntityClassId(string entityClassName)
         {
+            int directClassId = ResolveEntityClassIdFromName(entityClassName);
+            if (directClassId >= 0)
+            {
+                return directClassId;
+            }
+
             Type entityGroupsType = FindType("EntityGroups");
             MethodInfo getRandomFromGroup = entityGroupsType == null
                 ? null
@@ -178,6 +184,11 @@ namespace GraveAlive.GameIntegration
                 }
             }
 
+            return -1;
+        }
+
+        private static int ResolveEntityClassIdFromName(string entityClassName)
+        {
             Type entityClassType = FindType("EntityClass");
             if (entityClassType == null)
             {
