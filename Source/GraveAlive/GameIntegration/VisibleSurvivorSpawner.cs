@@ -52,18 +52,22 @@ namespace GraveAlive.GameIntegration
                 return;
             }
 
-            Type entityFactoryType = FindType("EntityFactory");
-            MethodInfo createEntity = entityFactoryType == null
-                ? null
-                : entityFactoryType.GetMethod("CreateEntity", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(int), typeof(Vector3) }, null);
-            if (createEntity == null)
+            Vector3 position = new Vector3(request.Position.X, request.Position.Y, request.Position.Z);
+            object entityCreationData = CreateEntityCreationData(entityClassId, position);
+            if (entityCreationData == null)
             {
-                runtime.MarkSpawnFailed(request.SurvivorId, "EntityFactory.CreateEntity was not found");
+                runtime.MarkSpawnFailed(request.SurvivorId, "EntityCreationData was not found");
                 return;
             }
 
-            Vector3 position = new Vector3(request.Position.X, request.Position.Y, request.Position.Z);
-            object entity = createEntity.Invoke(null, new object[] { entityClassId, position });
+            MethodInfo createEntity = ResolveCreateEntityMethod(entityCreationData.GetType());
+            if (createEntity == null)
+            {
+                runtime.MarkSpawnFailed(request.SurvivorId, "EntityFactory.CreateEntity(EntityCreationData) was not found");
+                return;
+            }
+
+            object entity = createEntity.Invoke(null, new[] { entityCreationData });
             if (entity == null)
             {
                 runtime.MarkSpawnFailed(request.SurvivorId, "EntityFactory returned no entity");
@@ -82,6 +86,34 @@ namespace GraveAlive.GameIntegration
             int entityId = ReadInt(entity, "entityId", "EntityId");
             runtime.MarkSpawnSucceeded(request.SurvivorId, entityId);
             Log.Out("[GraveAlive] Spawned survivor " + request.SurvivorName + " near player as " + request.EntityClassName + ".");
+        }
+
+        private static MethodInfo ResolveCreateEntityMethod(Type entityCreationDataType)
+        {
+            Type entityFactoryType = FindType("EntityFactory");
+            return entityFactoryType == null
+                ? null
+                : entityFactoryType.GetMethod("CreateEntity", BindingFlags.Public | BindingFlags.Static, null, new[] { entityCreationDataType }, null);
+        }
+
+        private static object CreateEntityCreationData(int entityClassId, Vector3 position)
+        {
+            Type entityCreationDataType = FindType("EntityCreationData");
+            if (entityCreationDataType == null)
+            {
+                return null;
+            }
+
+            object data = Activator.CreateInstance(entityCreationDataType);
+            SetMember(data, "entityClass", entityClassId);
+            SetMember(data, "id", -1);
+            SetMember(data, "pos", position);
+            SetMember(data, "rot", Vector3.zero);
+            SetMember(data, "lifetime", -1f);
+            SetMember(data, "belongsPlayerId", -1);
+            SetMember(data, "spawnById", -1);
+            SetMember(data, "spawnByName", "GraveAlive");
+            return data;
         }
 
         private void TryDespawn(GraveAliveRuntime runtime, SurvivorSpawnRequest request)
@@ -313,6 +345,22 @@ namespace GraveAlive.GameIntegration
             }
 
             return -1;
+        }
+
+        private static void SetMember(object target, string memberName, object value)
+        {
+            FieldInfo field = target.GetType().GetField(memberName, BindingFlags.Public | BindingFlags.Instance);
+            if (field != null)
+            {
+                field.SetValue(target, value);
+                return;
+            }
+
+            PropertyInfo property = target.GetType().GetProperty(memberName, BindingFlags.Public | BindingFlags.Instance);
+            if (property != null && property.CanWrite)
+            {
+                property.SetValue(target, value, null);
+            }
         }
 
         private static Type FindType(string typeName)
