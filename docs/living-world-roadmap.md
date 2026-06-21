@@ -31,6 +31,8 @@ Implemented in `Source/GraveAlive/Simulation`:
 - Spawn planning that stages nearby simulated survivors around active players,
   respects a maximum visible survivor count, and creates spawn/despawn requests.
 - Spawn failure cooldowns to avoid repeating a bad spawn attempt every frame.
+- XML persistence for survivors, relationships, factions, settlements, and
+  visible-spawn state.
 - Behavior event log for debugging and future in-game display.
 
 Implemented in `Source/GraveAlive/GameIntegration`:
@@ -44,6 +46,8 @@ Implemented in `Source/GraveAlive/GameIntegration`:
   easier to patch after a local compile/test.
 - Log summaries that include visible, pending, cooling-down, and background
   simulated survivor counts.
+- Startup load, autosave, and process-exit save hooks for the living-world save
+  file.
 
 ## Integration phases
 
@@ -51,8 +55,9 @@ Implemented in `Source/GraveAlive/GameIntegration`:
 
 - Build against the local 7D2D `7DaysToDie_Data/Managed` assemblies.
 - Verify the `GameManager.Update` patch for the target game version.
-- Replace periodic log-only updates with save/load-aware lifecycle hooks.
-- Persist simulation state alongside the world save.
+- Verify startup load, autosave, and shutdown/process-exit save behavior.
+- Move persistence from the mod folder to a world-specific save folder once the
+  correct 7D2D save-path APIs are verified.
 
 ### Phase 2: Survivor entity spawning
 

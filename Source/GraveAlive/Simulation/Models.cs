@@ -223,6 +223,11 @@ namespace GraveAlive.Simulation
 
             return null;
         }
+
+        public void Clear()
+        {
+            _items.Clear();
+        }
     }
 
     public sealed class SurvivorNpc
@@ -252,6 +257,11 @@ namespace GraveAlive.Simulation
             BuildingSkill = traits.Building;
             CombatSkill = (traits.Bravery + traits.Aggression) / 2;
             TradeSkill = traits.Trading;
+        }
+
+        public void RestoreNeeds(int hunger, int safety, int belonging, int ambition)
+        {
+            Needs = new Needs(hunger, safety, belonging, ambition);
         }
 
         public ResourceKind MostNeededResource()
@@ -391,6 +401,11 @@ namespace GraveAlive.Simulation
             _members.Add(survivorId);
         }
 
+        public void ClearMembers()
+        {
+            _members.Clear();
+        }
+
         public bool Contains(Guid survivorId)
         {
             return _members.Contains(survivorId);
@@ -416,6 +431,14 @@ namespace GraveAlive.Simulation
             Defenses = 10;
             Comfort = 10;
             Workshops = 0;
+        }
+
+        public void RestoreState(SettlementKind kind, int defenses, int comfort, int workshops)
+        {
+            Kind = kind;
+            Defenses = Clamp(defenses);
+            Comfort = Clamp(comfort);
+            Workshops = Clamp(workshops);
         }
 
         public void Improve(int defenses, int comfort, int workshops)

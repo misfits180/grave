@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using GraveAlive;
 using GraveAlive.Simulation;
@@ -15,6 +16,7 @@ namespace GraveAlive.Tests
                 EvolvesAutonomousSociety();
                 PlansVisibleSurvivorSpawns();
                 AppliesSpawnRetryCooldown();
+                SavesAndLoadsLivingWorld();
                 Console.WriteLine("All GraveAlive simulation checks passed.");
                 return 0;
             }
@@ -97,6 +99,37 @@ namespace GraveAlive.Tests
             Assert(
                 immediateRetryRequests.All(request => request.SurvivorId != first.SurvivorId),
                 "Expected failed survivor spawn to wait before retrying.");
+        }
+
+        private static void SavesAndLoadsLivingWorld()
+        {
+            string path = Path.Combine(Path.GetTempPath(), "grave-alive-test-save.xml");
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+
+            SimulationSettings settings = new SimulationSettings
+            {
+                StartingSurvivorCount = 8,
+                MaxVisibleSurvivors = 3,
+                MaxSpawnRequestsPerTick = 3
+            };
+            GraveAliveRuntime runtime = new GraveAliveRuntime(settings, 1234);
+            runtime.AdvanceTicks(30);
+            SurvivorSpawnRequest first = runtime.PlanVisibleSurvivorSpawns(new[] { new WorldPosition(100, 0, 100) }).First();
+            runtime.MarkSpawnFailed(first.SurvivorId, "test failure");
+            runtime.Save(path);
+
+            GraveAliveRuntime loaded = GraveAliveRuntime.LoadOrCreate(settings, 9999, path);
+
+            Assert(loaded.World.Survivors.Count() == runtime.World.Survivors.Count(), "Expected survivor count to round-trip through save.");
+            Assert(loaded.World.Relationships.Count() == runtime.World.Relationships.Count(), "Expected relationships to round-trip through save.");
+            Assert(loaded.World.Factions.Count() == runtime.World.Factions.Count(), "Expected factions to round-trip through save.");
+            Assert(loaded.World.Settlements.Count() == runtime.World.Settlements.Count(), "Expected settlements to round-trip through save.");
+            Assert(loaded.SpawnCoordinator.States.Any(state => state.FailedAttempts > 0), "Expected spawn failure state to round-trip through save.");
+
+            File.Delete(path);
         }
 
         private static void Assert(bool condition, string message)

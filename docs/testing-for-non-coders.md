@@ -29,12 +29,18 @@ Open the game log after loading into a world. Look for these messages:
 
 ```text
 [GraveAlive] Living-world simulation initialized.
+[GraveAlive] Save file: ...
 [GraveAlive] Spawned survivor ...
 ```
 
 If you see `Spawned survivor`, the mod has reached the important first visible
 NPC milestone: it asked the game to create a survivor near a player and the game
 accepted the request.
+
+If you see `Save file`, the mod has picked a place to remember the living-world
+state. That save file is separate from your normal 7 Days to Die save. It stores
+the Grave Alive survivors, relationships, factions, settlements, and spawn
+status.
 
 The regular status line now also includes spawn counts:
 
@@ -73,3 +79,24 @@ attempts instead of spamming the same error every frame.
 
 If you still see constant repeated errors, copy the repeated lines from the log.
 Those lines will tell us what to fix next.
+
+## If survivors reset after restarting
+
+Look for:
+
+```text
+[GraveAlive] Saved living-world state
+```
+
+If you never see that line, the mod did not save successfully. Copy any line
+that says:
+
+```text
+[GraveAlive] Failed to save living-world state
+```
+
+That message usually means the game could not write to the selected folder.
+
+If the save file exists but cannot be read, the mod should start a fresh
+simulation instead of crashing the game. The log will say it could not load the
+Grave Alive save.

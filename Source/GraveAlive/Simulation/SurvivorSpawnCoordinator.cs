@@ -32,6 +32,11 @@ namespace GraveAlive.Simulation
             return state;
         }
 
+        public void RestoreState(SurvivorSpawnState state)
+        {
+            _states[state.SurvivorId] = state;
+        }
+
         public IReadOnlyList<SurvivorSpawnRequest> Plan(WorldState world, IEnumerable<WorldPosition> playerPositions)
         {
             List<WorldPosition> players = playerPositions == null

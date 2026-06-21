@@ -66,6 +66,11 @@ namespace GraveAlive.Simulation
             Tick++;
         }
 
+        public void SetTick(long tick)
+        {
+            Tick = tick < 0 ? 0 : tick;
+        }
+
         public void AddSurvivor(SurvivorNpc survivor)
         {
             _survivors[survivor.Id] = survivor;
@@ -118,6 +123,11 @@ namespace GraveAlive.Simulation
                 Random.Next(0, 35));
             _relationships[key] = relationship;
             return relationship;
+        }
+
+        public void AddRelationship(Relationship relationship)
+        {
+            _relationships[RelationshipKey(relationship.FirstId, relationship.SecondId)] = relationship;
         }
 
         public IEnumerable<Relationship> RelationshipsFor(Guid survivorId)

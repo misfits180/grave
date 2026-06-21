@@ -14,6 +14,8 @@ The current repository contains:
   request nearby survivor entities without flooding the world.
 - XML entity definitions for a named `Grave Alive Survivor` that reuses vanilla
   survivor behavior and art.
+- XML save/load support for Grave Alive survivors, relationships, factions,
+  settlements, and visible-spawn state.
 - A small XML quality-of-life patch that raises `resourceWood` stack size to
   `10000`.
 
@@ -39,6 +41,8 @@ game assemblies are available.
   output.
 - Nearby simulated survivors can now be staged near active players and converted
   into visible survivor entity spawn requests.
+- The living-world simulation can save and load its state instead of resetting
+  every time the game restarts.
 
 ## Repository layout
 
@@ -103,6 +107,7 @@ log for:
 
 ```text
 [GraveAlive] Living-world simulation initialized.
+[GraveAlive] Save file: ...
 [GraveAlive] Spawned survivor ...
 ```
 

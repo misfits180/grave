@@ -11,6 +11,7 @@ namespace GraveAlive
         private readonly SimulationSettings _settings;
         private readonly SurvivorSpawnCoordinator _spawnCoordinator;
         private float _accumulatedSeconds;
+        private long _lastSavedTick = -1;
 
         public WorldState World { get; private set; }
         public SurvivorSpawnCoordinator SpawnCoordinator
@@ -27,6 +28,34 @@ namespace GraveAlive
             SeedSurvivors();
             PrimeRelationships();
             World.Record(null, "system", "GraveAlive initialized: " + World.Snapshot());
+        }
+
+        private GraveAliveRuntime(SimulationSettings settings, WorldState world, SurvivorSpawnCoordinator spawnCoordinator)
+        {
+            _settings = settings ?? new SimulationSettings();
+            World = world;
+            _director = new AiDirector(_settings);
+            _spawnCoordinator = spawnCoordinator;
+        }
+
+        public static GraveAliveRuntime LoadOrCreate(SimulationSettings settings, int seed, string savePath)
+        {
+            if (!string.IsNullOrEmpty(savePath) && System.IO.File.Exists(savePath))
+            {
+                try
+                {
+                    PersistedWorld persistedWorld = WorldPersistence.Load(savePath, settings, seed);
+                    return new GraveAliveRuntime(settings, persistedWorld.World, persistedWorld.SpawnCoordinator);
+                }
+                catch (Exception exception)
+                {
+                    GraveAliveRuntime fallbackRuntime = new GraveAliveRuntime(settings, seed);
+                    fallbackRuntime.World.Record(null, "system", "Could not load GraveAlive save; started a new simulation. " + exception.Message);
+                    return fallbackRuntime;
+                }
+            }
+
+            return new GraveAliveRuntime(settings, seed);
         }
 
         public void Update(float elapsedSeconds)
@@ -89,6 +118,21 @@ namespace GraveAlive
             BehaviorEvent lastEvent = World.Events.LastOrDefault();
             string lastMessage = lastEvent == null ? "none" : lastEvent.Category + ": " + lastEvent.Message;
             return World.Snapshot() + ", " + _spawnCoordinator.Summary(World.Tick) + ", lastEvent=" + lastMessage;
+        }
+
+        public bool ShouldAutosave()
+        {
+            return _settings.AutosaveTickInterval > 0 &&
+                World.Tick > 0 &&
+                World.Tick != _lastSavedTick &&
+                World.Tick % _settings.AutosaveTickInterval == 0;
+        }
+
+        public void Save(string savePath)
+        {
+            WorldPersistence.Save(savePath, World, _spawnCoordinator);
+            _lastSavedTick = World.Tick;
+            World.Record(null, "system", "GraveAlive saved world state to " + savePath + ".");
         }
 
         private void SeedSurvivors()

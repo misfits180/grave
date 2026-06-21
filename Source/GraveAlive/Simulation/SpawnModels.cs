@@ -37,6 +37,26 @@ namespace GraveAlive.Simulation
             LastFailureTick = -1;
         }
 
+        public SurvivorSpawnState(
+            Guid survivorId,
+            string entityClassName,
+            int? entityId,
+            SurvivorVisibilityState visibilityState,
+            long lastRequestTick,
+            long lastVisibleTick,
+            long lastFailureTick,
+            int failedAttempts)
+        {
+            SurvivorId = survivorId;
+            EntityClassName = entityClassName;
+            EntityId = entityId;
+            VisibilityState = visibilityState;
+            LastRequestTick = lastRequestTick;
+            LastVisibleTick = lastVisibleTick;
+            LastFailureTick = lastFailureTick;
+            FailedAttempts = failedAttempts;
+        }
+
         public bool IsVisibleOrPending
         {
             get
