@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configs>
+    <!-- Keep early-game harvesting trips from filling the inventory with wood stacks. -->
+    <set xpath="/items/item[@name='resourceWood']/property[@name='Stacknumber']/@value">10000</set>
+</configs>
