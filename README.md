@@ -93,12 +93,31 @@ survivor behavior/art, so this step does not add custom models.
 ## Building the code mod
 
 7 Days to Die code mods require the game's managed assemblies and EAC disabled.
-Build from a machine that has a .NET SDK and access to the game install:
+If you are using Mono on Linux/macOS, or this cloud environment, build a
+ready-to-copy mod folder with:
 
 ```bash
-dotnet build Source/GraveAlive/GraveAlive.csproj \
-  -c Release \
-  -p:GameManagedDir="/path/to/7 Days To Die/7DaysToDie_Data/Managed"
+./scripts/package-mod.sh "/path/to/7 Days To Die/7DaysToDie_Data/Managed"
+```
+
+That writes:
+
+```text
+dist/grave/
+```
+
+Copy that whole `grave` folder into your `7 Days To Die/Mods` folder.
+
+If you prefer to build only the DLL, use:
+
+```bash
+./scripts/build-game-mod.sh "/path/to/7 Days To Die/7DaysToDie_Data/Managed"
+```
+
+That writes:
+
+```text
+build/GraveAlive.dll
 ```
 
 Then copy the built `GraveAlive.dll` into the mod root next to `ModInfo.xml`.
@@ -113,17 +132,13 @@ log for:
 
 For a plain-English checklist, see `docs/testing-for-non-coders.md`.
 
-If you are using Mono on Linux/macOS, or this cloud environment, you can also
-build with:
+You can also build from a machine that has a .NET SDK and access to the game
+install:
 
 ```bash
-./scripts/build-game-mod.sh "/path/to/7 Days To Die/7DaysToDie_Data/Managed"
-```
-
-That writes:
-
-```text
-build/GraveAlive.dll
+dotnet build Source/GraveAlive/GraveAlive.csproj \
+  -c Release \
+  -p:GameManagedDir="/path/to/7 Days To Die/7DaysToDie_Data/Managed"
 ```
 
 ## Testing the simulation core

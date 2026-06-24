@@ -3,6 +3,14 @@
 This guide explains what to check after somebody builds the `GraveAlive.dll`
 file for you.
 
+If somebody ran the package script for you, the installable folder is:
+
+```text
+dist/grave
+```
+
+Copy that whole `grave` folder into your `7 Days To Die/Mods` folder.
+
 If you have a built file at:
 
 ```text
