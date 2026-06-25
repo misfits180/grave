@@ -19,35 +19,18 @@ namespace GraveAlive.GameIntegration
 
         internal static void Register()
         {
-            ModEvents.ChatMessage.RegisterHandler(OnChatMessage);
+            // Intentionally empty: V2.6 reflection/type loading can fail if
+            // we hard-reference ModEvents.ChatMessage types across builds.
         }
 
         internal static void Unregister()
         {
-            ModEvents.ChatMessage.UnregisterHandler(OnChatMessage);
+            // Intentionally empty, see Register().
         }
 
         internal static string BuildGreeting(string survivorName)
         {
             return "Easy... I'm not infected. Name's " + survivorName + ".";
-        }
-
-        private static bool OnChatMessage(
-            ClientInfo clientInfo,
-            EChatType chatType,
-            int senderEntityId,
-            string message,
-            string mainName,
-            bool localizeMain,
-            List<int> recipientEntityIds)
-        {
-            if (ModApi.IsShuttingDown || string.IsNullOrEmpty(message))
-            {
-                return true;
-            }
-
-            TryRespondToNearbySurvivors(clientInfo, senderEntityId, message);
-            return true;
         }
 
         internal static void TryRespondToNearbySurvivors(ClientInfo clientInfo, int senderEntityId, string message)
@@ -136,6 +119,27 @@ namespace GraveAlive.GameIntegration
             }
 
             return false;
+        }
+    }
+
+    [HarmonyPatch(typeof(GameManager), "ChatMessageServer")]
+    internal static class SurvivorChatMessagePatch
+    {
+        private static void Postfix(
+            ClientInfo _cInfo,
+            EChatType _chatType,
+            int _senderEntityId,
+            string _msg,
+            string _mainName,
+            bool _localizeMain,
+            List<int> _recipientEntityIds)
+        {
+            if (ModApi.IsShuttingDown || string.IsNullOrEmpty(_msg))
+            {
+                return;
+            }
+
+            SurvivorChatHandler.TryRespondToNearbySurvivors(_cInfo, _senderEntityId, _msg);
         }
     }
 }
