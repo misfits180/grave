@@ -73,7 +73,7 @@ namespace GraveAlive.GameIntegration
             float height;
             if (TryReadTerrainHeight(world, position.x, position.z, out height))
             {
-                position.y = height + 0.95f;
+                position.y = height + 1.6f;
             }
 
             return position;

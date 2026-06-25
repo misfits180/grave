@@ -7,6 +7,7 @@ These files are built against **7 Days to Die V 2.6 (b14)** game assemblies.
 - `grave-v0.4.3-7dtd-2.6.zip`
   - Includes updated config files for survivor collision/interactions.
   - Uses a vanilla trader entity class for maximum compatibility.
+  - Rotates visible survivors across multiple vanilla trader variants.
 - `grave-v0.4.3-7dtd-2.6-avsafe.txt` (same package bytes, alternate extension)
   - For antivirus workflows that block direct `.zip` downloads.
   - Rename to `.zip` after download before extracting.
