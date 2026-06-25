@@ -82,6 +82,7 @@ namespace GraveAlive.GameIntegration
             }
 
             spawnMethod.Invoke(world, new[] { entity });
+            SurvivorEntitySetup.TryApplySurvivorIdentity(entity, request.SurvivorName);
 
             int entityId = ReadInt(entity, "entityId", "EntityId");
             runtime.MarkSpawnSucceeded(request.SurvivorId, entityId);

@@ -1,4 +1,5 @@
 #if GRAVE_7DTD
+using System;
 using System.Reflection;
 using UnityEngine;
 
@@ -61,6 +62,32 @@ namespace GraveAlive.GameIntegration
             }
 
             SetEntityName(entity, survivorName);
+        }
+
+        internal static void TryApplySurvivorIdentity(object entity, string survivorName)
+        {
+            if (entity == null)
+            {
+                return;
+            }
+
+            try
+            {
+                if (!string.IsNullOrEmpty(survivorName))
+                {
+                    SetEntityName(entity, survivorName);
+                }
+
+                int entityId = ReadInt(entity, "entityId", "EntityId");
+                if (entityId >= 0)
+                {
+                    SurvivorEntityRegistry.Register(entityId, survivorName);
+                }
+            }
+            catch
+            {
+                // Name application is best-effort only and must not destabilize spawns.
+            }
         }
 
         internal static Vector3 SnapToGround(object world, Vector3 position)

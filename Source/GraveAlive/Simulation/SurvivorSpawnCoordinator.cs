@@ -34,7 +34,18 @@ namespace GraveAlive.Simulation
 
         public void RestoreState(SurvivorSpawnState state)
         {
-            _states[state.SurvivorId] = state;
+            // Migrate older save-state records to current spawn settings so
+            // class name changes and old failure cooldowns do not suppress
+            // all visible spawns after updates.
+            _states[state.SurvivorId] = new SurvivorSpawnState(
+                state.SurvivorId,
+                _settings.SurvivorEntityClassName,
+                null,
+                SurvivorVisibilityState.Simulated,
+                state.LastRequestTick,
+                -1,
+                -1,
+                0);
         }
 
         public IReadOnlyList<SurvivorSpawnRequest> Plan(WorldState world, IEnumerable<WorldPosition> playerPositions)
