@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configs>
+    <!-- Used by the C# spawn adapter when making simulated survivors visible. -->
+    <append xpath="/entitygroups">
+        <entitygroup name="GraveAliveSurvivors">
+            <entity name="npcTraderJoel" prob="30" />
+            <entity name="npcTraderRekt" prob="20" />
+            <entity name="npcTraderBob" prob="20" />
+            <entity name="npcTraderHugh" prob="20" />
+            <entity name="npcTraderJen" prob="10" />
+        </entitygroup>
+    </append>
+</configs>

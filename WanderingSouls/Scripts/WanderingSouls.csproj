@@ -1,0 +1,50 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <AssemblyName>WanderingSouls</AssemblyName>
+    <RootNamespace>WanderingSouls</RootNamespace>
+    <LangVersion>latest</LangVersion>
+    <OutputPath>..\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <!--
+    Set 7DTD_MANAGED to your game's Managed folder before building, e.g.:
+    Windows: C:\Program Files (x86)\Steam\steamapps\common\7 Days To Die\7DaysToDie_Data\Managed
+    Linux:   ~/.steam/steam/steamapps/common/7 Days To Die/7DaysToDie_Data/Managed
+  -->
+  <PropertyGroup>
+    <_7DTDManaged Condition="'$(7DTD_MANAGED)' != ''">$(7DTD_MANAGED)</_7DTDManaged>
+    <_7DTDManaged Condition="'$(_7DTDManaged)' == ''">$(MSBuildThisFileDirectory)..\7dtd-binaries\Managed</_7DTDManaged>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>$(_7DTDManaged)\Assembly-CSharp.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="0Harmony">
+      <HintPath>$(_7DTDManaged)\0Harmony.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>$(_7DTDManaged)\UnityEngine.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(_7DTDManaged)\UnityEngine.CoreModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="LogLibrary">
+      <HintPath>$(_7DTDManaged)\LogLibrary.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Scripts\**\*.cs" />
+  </ItemGroup>
+
+</Project>
