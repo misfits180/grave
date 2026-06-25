@@ -52,7 +52,7 @@ namespace GraveAlive.GameIntegration
                 return;
             }
 
-            Vector3 position = new Vector3(request.Position.X, request.Position.Y, request.Position.Z);
+            Vector3 position = ResolveSpawnPosition(request.Position, world);
             object entityCreationData = CreateEntityCreationData(entityClassId, position);
             if (entityCreationData == null)
             {
@@ -83,9 +83,29 @@ namespace GraveAlive.GameIntegration
 
             spawnMethod.Invoke(world, new[] { entity });
 
+            SurvivorEntitySetup.Configure(entity, request.SurvivorName, world);
+
             int entityId = ReadInt(entity, "entityId", "EntityId");
             runtime.MarkSpawnSucceeded(request.SurvivorId, entityId);
             GameLog.Out("[GraveAlive] Spawned survivor " + request.SurvivorName + " near player as " + request.EntityClassName + ".");
+        }
+
+        private Vector3 ResolveSpawnPosition(WorldPosition requestPosition, object world)
+        {
+            Vector3 position = new Vector3(requestPosition.X, requestPosition.Y, requestPosition.Z);
+            IReadOnlyList<WorldPosition> players = GetPlayerPositions();
+
+            // Seed positions start near world origin with Y=0; convert to offsets from the player.
+            if (players.Count > 0 && requestPosition.Y <= 1f)
+            {
+                WorldPosition anchor = players[0];
+                position = new Vector3(
+                    anchor.X + requestPosition.X,
+                    anchor.Y,
+                    anchor.Z + requestPosition.Z);
+            }
+
+            return SurvivorEntitySetup.SnapToGround(world, position);
         }
 
         private static MethodInfo ResolveCreateEntityMethod(Type entityCreationDataType)
@@ -125,10 +145,13 @@ namespace GraveAlive.GameIntegration
                 return;
             }
 
-            object entity = TryGetEntity(world, request.EntityId.Value);
+            int entityId = request.EntityId.Value;
+            SurvivorEntityRegistry.Unregister(entityId);
+
+            object entity = TryGetEntity(world, entityId);
             if (entity != null)
             {
-                TryRemoveEntity(world, entity, request.EntityId.Value);
+                TryRemoveEntity(world, entity, entityId);
             }
 
             runtime.MarkDespawnSucceeded(request.SurvivorId);

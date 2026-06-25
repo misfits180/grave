@@ -13,6 +13,9 @@ namespace GraveAlive.GameIntegration
         internal static GraveAliveRuntime Runtime { get; private set; }
         internal static VisibleSurvivorSpawner Spawner { get; private set; }
         internal static string SavePath { get; private set; }
+        internal static bool IsShuttingDown { get; private set; }
+
+        private static Harmony _harmony;
 
         public void InitMod(Mod modInstance)
         {
@@ -20,10 +23,12 @@ namespace GraveAlive.GameIntegration
             SavePath = Path.Combine(ResolveWritableModDirectory(modInstance), "Saves", "grave-alive-world.xml");
             Runtime = GraveAliveRuntime.LoadOrCreate(settings, Environment.TickCount, SavePath);
             Spawner = new VisibleSurvivorSpawner(settings);
-            AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
 
-            Harmony harmony = new Harmony("com.cursor.gravealive");
-            harmony.PatchAll(Assembly.GetExecutingAssembly());
+            _harmony = new Harmony("com.cursor.gravealive");
+            _harmony.PatchAll(Assembly.GetExecutingAssembly());
+
+            SurvivorChatHandler.Register();
+            ModEvents.GameShutdown.RegisterHandler(OnGameShutdown);
 
             GameLog.Out("[GraveAlive] Living-world simulation initialized.");
             GameLog.Out("[GraveAlive] Save file: " + SavePath);
@@ -31,7 +36,7 @@ namespace GraveAlive.GameIntegration
 
         internal static void SaveNow(string reason)
         {
-            if (Runtime == null || string.IsNullOrEmpty(SavePath))
+            if (IsShuttingDown || Runtime == null || string.IsNullOrEmpty(SavePath))
             {
                 return;
             }
@@ -47,9 +52,41 @@ namespace GraveAlive.GameIntegration
             }
         }
 
-        private static void OnProcessExit(object sender, EventArgs eventArgs)
+        private static void OnGameShutdown(ref ModEvents.SGameShutdownData data)
         {
-            SaveNow("process exit");
+            Shutdown("game shutdown");
+        }
+
+        internal static void Shutdown(string reason)
+        {
+            if (IsShuttingDown)
+            {
+                return;
+            }
+
+            IsShuttingDown = true;
+            SaveNow(reason);
+
+            try
+            {
+                SurvivorChatHandler.Unregister();
+            }
+            catch (Exception exception)
+            {
+                GameLog.Out("[GraveAlive] Chat handler cleanup failed: " + exception.Message);
+            }
+
+            SurvivorEntityRegistry.Clear();
+            Spawner = null;
+
+            try
+            {
+                _harmony?.UnpatchAll("com.cursor.gravealive");
+            }
+            catch (Exception exception)
+            {
+                GameLog.Out("[GraveAlive] Harmony cleanup failed: " + exception.Message);
+            }
         }
 
         private static string ResolveWritableModDirectory(Mod modInstance)
@@ -87,26 +124,39 @@ namespace GraveAlive.GameIntegration
 
         private static void Postfix()
         {
-            if (ModApi.Runtime == null)
+            if (ModApi.IsShuttingDown || ModApi.Runtime == null)
             {
                 return;
             }
 
-            ModApi.Runtime.Update(Time.deltaTime);
-            if (ModApi.Spawner != null)
+            try
             {
-                ModApi.Spawner.Process(ModApi.Runtime);
-            }
+                GameManager gameManager = GameManager.Instance;
+                if (gameManager == null || gameManager.World == null)
+                {
+                    return;
+                }
 
-            if (ModApi.Runtime.ShouldAutosave())
-            {
-                ModApi.SaveNow("autosave");
-            }
+                ModApi.Runtime.Update(Time.deltaTime);
+                if (ModApi.Spawner != null)
+                {
+                    ModApi.Spawner.Process(ModApi.Runtime);
+                }
 
-            if (Time.realtimeSinceStartup - _lastReportTime > 60f)
+                if (ModApi.Runtime.ShouldAutosave())
+                {
+                    ModApi.SaveNow("autosave");
+                }
+
+                if (Time.realtimeSinceStartup - _lastReportTime > 60f)
+                {
+                    _lastReportTime = Time.realtimeSinceStartup;
+                    GameLog.Out("[GraveAlive] " + ModApi.Runtime.Summary());
+                }
+            }
+            catch (Exception exception)
             {
-                _lastReportTime = Time.realtimeSinceStartup;
-                GameLog.Out("[GraveAlive] " + ModApi.Runtime.Summary());
+                GameLog.Out("[GraveAlive] Update tick skipped: " + exception.Message);
             }
         }
     }

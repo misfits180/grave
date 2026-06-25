@@ -159,10 +159,22 @@ Or with Mono:
 ## Important limitation
 
 The current code advances an autonomous survivor society simulation, plans which
-survivors should become visible near players, and includes a first game-side
-adapter for spawning those survivor entities. The adapter still needs to be
-compiled and tested against an installed 7D2D build because entity/player/world
-method names can change between game versions.
+survivors should become visible near players, and includes a game-side
+adapter for spawning those survivor entities. POI claiming, actual block
+placement, advanced NPC pathing, and full trader commerce are still future
+steps.
 
-POI claiming, actual block placement, advanced NPC pathing, and trader-dialog
-integration are still future steps.
+## Troubleshooting (v0.4.3 fixes)
+
+If a survivor spawns but you can walk through them, cannot talk to them, or
+the game spams errors on exit, install **v0.4.3+** and rebuild `GraveAlive.dll`.
+
+| Symptom | Cause | Fix in v0.4.3 |
+|---------|-------|---------------|
+| Walk through NPC | Physics disabled on trader spawn; bad Y position | Post-spawn collision setup + terrain snap |
+| Cannot interact | No activation handler wired | Press **E** — shows "Talk to \<name\>" |
+| Chat "hi" ignored | No chat handler registered | Say `hi` / `hello` within ~12 blocks in global chat |
+| Exit error spam | Update loop ran during shutdown | Shutdown guard + Harmony cleanup |
+
+After updating, delete any old `Mods/grave/Saves/grave-alive-world.xml` if
+spawn state looks corrupted, then start a fresh game save to test.

@@ -2,7 +2,7 @@
 <xml>
     <Name value="grave" />
     <DisplayName value="Grave Alive" />
-    <Version value="0.4.0" />
-    <Description value="Adds living-world persistence for survivor NPCs, factions, settlements, and spawn state." />
+    <Version value="0.4.3" />
+    <Description value="Living-world survivor NPCs with collision, talk interaction, and chat greetings." />
     <Author value="Cursor" />
 </xml>
