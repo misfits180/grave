@@ -34,7 +34,7 @@ namespace GraveAlive.Simulation
             SurvivorEntityClassName = "graveAliveSurvivorRanged";
             SurvivorEntityGroupName = "GraveAliveSurvivors";
             SpawnRetryDelayTicks = 6;
-            AutosaveTickInterval = 12;
+            AutosaveTickInterval = 0;
         }
     }
 }

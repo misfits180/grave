@@ -21,6 +21,7 @@ namespace GraveAlive.GameIntegration
         {
             SimulationSettings settings = new SimulationSettings();
             SavePath = Path.Combine(ResolveWritableModDirectory(modInstance), "Saves", "grave-alive-world.xml");
+            EnsureSaveDirectoryExists();
             Runtime = GraveAliveRuntime.LoadOrCreate(settings, Environment.TickCount, SavePath);
             Spawner = new VisibleSurvivorSpawner(settings);
             AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
@@ -43,6 +44,7 @@ namespace GraveAlive.GameIntegration
 
             try
             {
+                EnsureSaveDirectoryExists();
                 Runtime.Save(SavePath);
                 GameLog.Out("[GraveAlive] Saved living-world state (" + reason + ").");
             }
@@ -114,6 +116,25 @@ namespace GraveAlive.GameIntegration
 
             FieldInfo field = target.GetType().GetField(name, BindingFlags.Public | BindingFlags.Instance);
             return field == null ? null : field.GetValue(target) as string;
+        }
+
+        private static void EnsureSaveDirectoryExists()
+        {
+            if (string.IsNullOrEmpty(SavePath))
+            {
+                return;
+            }
+
+            string directory = Path.GetDirectoryName(SavePath);
+            if (string.IsNullOrEmpty(directory))
+            {
+                return;
+            }
+
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
         }
     }
 
