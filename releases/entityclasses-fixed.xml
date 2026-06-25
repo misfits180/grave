@@ -1,76 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configs>
     <!--
-        V 2.6 comments out npcSurvivorTemplate/npcSurvivorRanged in vanilla
-        entityclasses.xml, so Grave Alive defines its own survivor classes here.
+        V 2.6 comments out npcSurvivorTemplate/npcSurvivorRanged and no longer
+        registers the NpcUMA model type. Reuse the active trader NPC template
+        so Grave Alive survivors can spawn with vanilla human art/AI.
     -->
     <append xpath="/entity_classes">
-        <entity_class name="graveAliveSurvivorTemplate">
-            <property name="Class" value="EntitySurvivor"/>
+        <entity_class name="graveAliveSurvivorRanged" extends="npcTraderTemplate">
             <property name="UserSpawnType" value="None"/>
-            <property name="EntityType" value="Player"/>
-            <property name="Faction" value="whiteriver"/>
-            <property name="Mesh" value="Player/Male/player_maleRagdoll"/>
-            <property name="AvatarController" value="AvatarUMAController"/>
-            <property name="ModelType" value="NpcUMA"/>
-            <property name="HasRagdoll" value="true"/>
-            <property name="Prefab" value="NPC"/>
-            <property name="Parent" value="Players"/>
-            <property name="PhysicsBody" value="Player"/>
-
-            <property name="AIPackages" value="Human Basic, Human Melee"/>
-
-            <property name="ItemsOnEnterGame.GameModeSurvival" value="meleeWpnClubT0WoodenClub"/>
-            <property name="ItemsOnEnterGame.GameModeSurvivalSP" value="meleeWpnClubT0WoodenClub"/>
-            <property name="ItemsOnEnterGame.GameModeSurvivalMP" value="meleeWpnClubT0WoodenClub"/>
-            <property name="MaxHealth" value="150"/>
-            <property name="MaxViewAngle" value="180"/>
-            <property name="Weight" value="70"/>
-            <property name="MoveSpeed" value="0.75"/>
-            <property name="MoveSpeedAggro" value="1.15, 1.15"/>
-            <property name="MoveSpeedPanic" value="1.15"/>
-            <property name="CanClimbLadders" value="true"/>
-            <property name="IsEnemyEntity" value="true"/>
-            <property name="SurfaceCategory" value="organic"/>
-            <property name="WalkType" value="7"/>
-            <property name="ParticleOnDeath" value="blood_death"/>
-            <property name="SoundRandomTime" value="200"/>
-            <property name="SoundRandom" value="Player_Male/player1stamina"/>
-            <property name="SoundHurt" value="Player_Male/player1painlg"/>
-            <property name="SoundHurtSmall" value="Player_Male/player1painsm"/>
-            <property name="SoundDeath" value="Player_Male/player1death"/>
-            <property name="SoundStamina" value="Player_Male/player1stamina"/>
-            <property name="SoundDrownPain" value="Player_Male/player1drownpain"/>
-            <property name="SoundWaterSurface" value="Player_Male/player1drownsurface"/>
-            <property name="SoundDrownDeath" value="Player_Male/player1drowndeath"/>
-            <property name="SoundJump" value="Player_Male/player1Jump"/>
-            <property name="SoundLandSoft" value="Player_Male/player1LandSoft"/>
-            <property name="SoundLandHard" value="Player_Male/player1LandHard"/>
-            <property name="SoundPlayerLandThump" value="PlayerLandThump"/>
-            <property name="TimeStayAfterDeath" value="30"/>
-            <property name="LootListOnDeath" value="15"/>
-            <property name="HasDeathAnim" value="true"/>
-            <effect_group name="Base Effects">
-                <passive_effect name="HealthMax" operation="base_set" value="150"/>
-            </effect_group>
-            <effect_group>
-                <requirement name="ProgressionLevel" progression_name="perkBatterUpMetalChain" target="other" operation="Equals" value="1"/>
-                <requirement name="HoldingItemHasTags" tags="club"/>
-                    <passive_effect name="EntityDamage" operation="perc_add" value="-.2"/>
-            </effect_group>
-        </entity_class>
-
-        <entity_class name="graveAliveSurvivorRanged" extends="graveAliveSurvivorTemplate">
             <property name="DisplayName" value="Grave Alive Survivor" />
             <property name="Tags" value="entity,human,npc,graveAliveSurvivor" />
-            <property name="ItemsOnEnterGame.GameModeSurvival" value="gunHandgunT1Pistol,ammo9mmBulletBall"/>
-            <property name="ItemsOnEnterGame.GameModeSurvivalSP" value="gunHandgunT1Pistol,ammo9mmBulletBall"/>
-            <property name="ItemsOnEnterGame.GameModeSurvivalMP" value="gunHandgunT1Pistol,ammo9mmBulletBall"/>
-
-            <property name="AttackTimeoutDay" value="0.5"/>
-            <property name="AttackTimeoutNight" value="0.5"/>
-
-            <property name="AIPackages" value="Human Basic, Human Ranged"/>
+            <property name="Mesh" value="@:Entities/Traders/Prefabs/TraderJoel.prefab"/>
+            <property name="Archetype" value="TraderJoel"/>
+            <property name="NPCID" value="gravealive"/>
+            <property name="Faction" value="whiteriver"/>
+            <property name="NavObject" value=""/>
+            <property name="IsEnemyEntity" value="false"/>
+            <property name="ExperienceGain" value="130"/>
+            <property name="LootListAlive" value=""/>
         </entity_class>
     </append>
 </configs>

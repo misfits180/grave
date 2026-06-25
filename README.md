@@ -88,8 +88,8 @@ building and installing `GraveAlive.dll`.
 
 `Config/entityclasses.xml` and `Config/entitygroups.xml` define the named
 `Grave Alive Survivor` used by the C# spawner. V 2.6 comments out vanilla
-`npcSurvivorRanged`, so the mod restores that survivor definition under
-`graveAliveSurvivorRanged` without adding custom models.
+`npcSurvivorRanged` and removes the old `NpcUMA` model type, so the mod defines
+`graveAliveSurvivorRanged` by extending the active trader NPC template.
 
 ## Building the code mod
 
