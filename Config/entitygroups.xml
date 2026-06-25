@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configs>
+    <!-- Used by the C# spawn adapter when making simulated survivors visible. -->
+    <append xpath="/entitygroups">
+        <entitygroup name="GraveAliveSurvivors">
+            <entity name="graveAliveSurvivorRanged" prob="1" />
+        </entitygroup>
+    </append>
+</configs>
