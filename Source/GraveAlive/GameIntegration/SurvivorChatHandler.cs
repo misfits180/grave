@@ -1,6 +1,7 @@
 #if GRAVE_7DTD
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using HarmonyLib;
 using UnityEngine;
 
@@ -40,7 +41,7 @@ namespace GraveAlive.GameIntegration
                 return;
             }
 
-            World world = GameManager.Instance == null ? null : GameManager.Instance.World;
+            World world = ResolveWorld();
             if (world == null)
             {
                 return;
@@ -119,6 +120,25 @@ namespace GraveAlive.GameIntegration
             }
 
             return false;
+        }
+
+        private static World ResolveWorld()
+        {
+            GameManager gameManager = GameManager.Instance;
+            if (gameManager == null)
+            {
+                return null;
+            }
+
+            Type gameManagerType = gameManager.GetType();
+            PropertyInfo property = gameManagerType.GetProperty("World", BindingFlags.Public | BindingFlags.Instance);
+            if (property != null)
+            {
+                return property.GetValue(gameManager, null) as World;
+            }
+
+            FieldInfo field = gameManagerType.GetField("World", BindingFlags.Public | BindingFlags.Instance);
+            return field == null ? null : field.GetValue(gameManager) as World;
         }
     }
 

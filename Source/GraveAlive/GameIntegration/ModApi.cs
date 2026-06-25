@@ -132,7 +132,7 @@ namespace GraveAlive.GameIntegration
             try
             {
                 GameManager gameManager = GameManager.Instance;
-                if (gameManager == null || gameManager.World == null)
+                if (gameManager == null)
                 {
                     return;
                 }
