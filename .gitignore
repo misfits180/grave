@@ -1,0 +1,12 @@
+build/
+dist/
+bin/
+obj/
+Saves/
+*.dll
+*.exe
+*.pdb
+*.mdb
+*.zip
+!releases/*.dll
+!releases/*.zip
