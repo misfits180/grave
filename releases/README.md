@@ -6,7 +6,7 @@ These files are built against **7 Days to Die V 2.6 (b14)** game assemblies.
 
 - `grave-v0.4.3-7dtd-2.6.zip`
   - Includes updated config files for survivor collision/interactions.
-  - Uses bandit-human base entity for better world-spawn stability.
+  - Uses a vanilla trader entity class for maximum compatibility.
 
 ## Quick install (no coding)
 

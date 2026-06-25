@@ -31,7 +31,7 @@ namespace GraveAlive.Simulation
             MaxSpawnRequestsPerTick = 2;
             SpawnRadius = 75f;
             DespawnRadius = 125f;
-            SurvivorEntityClassName = "npcBanditMelee";
+            SurvivorEntityClassName = "npcTraderJoel";
             SurvivorEntityGroupName = "GraveAliveSurvivors";
             SpawnRetryDelayTicks = 6;
             AutosaveTickInterval = 0;

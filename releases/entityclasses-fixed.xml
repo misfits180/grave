@@ -1,19 +1,3 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configs>
-    <!--
-        V 2.6 comments out npcSurvivorTemplate/npcSurvivorRanged and no longer
-        registers the NpcUMA model type. Reuse the active trader NPC template
-        so Grave Alive survivors can spawn with vanilla human art/AI.
-    -->
-    <append xpath="/entity_classes">
-        <entity_class name="graveAliveSurvivorRanged" extends="npcBanditMelee">
-            <property name="UserSpawnType" value="None"/>
-            <property name="DisplayName" value="Grave Alive Survivor" />
-            <property name="Tags" value="entity,human,npc,graveAliveSurvivor" />
-            <property name="Faction" value="whiteriver"/>
-            <property name="IsEnemyEntity" value="false"/>
-            <property name="ExperienceGain" value="130"/>
-            <property name="LootListAlive" value=""/>
-        </entity_class>
-    </append>
 </configs>
