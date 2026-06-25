@@ -20,7 +20,7 @@ namespace GraveAlive.GameIntegration
         public void InitMod(Mod modInstance)
         {
             SimulationSettings settings = new SimulationSettings();
-            SavePath = Path.Combine(ResolveWritableModDirectory(modInstance), "Saves", "grave-alive-world.xml");
+            SavePath = Path.Combine(ResolveWritableModDirectory(modInstance), "Saves", "grave-alive-world-safe.xml");
             EnsureSaveDirectoryExists();
             Runtime = GraveAliveRuntime.LoadOrCreate(settings, Environment.TickCount, SavePath);
             Spawner = new VisibleSurvivorSpawner(settings);

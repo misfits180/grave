@@ -27,8 +27,8 @@ namespace GraveAlive.Simulation
             TradeSurplusThreshold = 12;
             SettlementWoodCost = 20;
             SettlementStoneCost = 10;
-            MaxVisibleSurvivors = 6;
-            MaxSpawnRequestsPerTick = 2;
+            MaxVisibleSurvivors = 1;
+            MaxSpawnRequestsPerTick = 1;
             SpawnRadius = 75f;
             DespawnRadius = 125f;
             SurvivorEntityClassName = "npcTraderJoel";
