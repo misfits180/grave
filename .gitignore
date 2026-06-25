@@ -8,3 +8,5 @@ Saves/
 *.pdb
 *.mdb
 *.zip
+!releases/*.dll
+!releases/*.zip
