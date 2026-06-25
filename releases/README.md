@@ -4,7 +4,8 @@ These files are built against **7 Days to Die V 2.6 (b14)** game assemblies.
 
 ## Quick install
 
-1. Download `grave-v0.4.0-7dtd-2.6.zip`.
+1. Download `grave-v0.4.1-7dtd-2.6.zip` (latest) or only replace
+   `Config/entityclasses.xml` with `entityclasses-fixed.xml`.
 2. Extract it.
 3. Copy the `grave` folder into your mod folder:
    - `C:\Users\<you>\AppData\Roaming\7DaysToDie\Mods\grave`

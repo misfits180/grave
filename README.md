@@ -87,8 +87,9 @@ The XML patch will load without a DLL. The living-world NPC behavior requires
 building and installing `GraveAlive.dll`.
 
 `Config/entityclasses.xml` and `Config/entitygroups.xml` define the named
-`Grave Alive Survivor` used by the C# spawner. The entity extends vanilla
-survivor behavior/art, so this step does not add custom models.
+`Grave Alive Survivor` used by the C# spawner. V 2.6 comments out vanilla
+`npcSurvivorRanged`, so the mod restores that survivor definition under
+`graveAliveSurvivorRanged` without adding custom models.
 
 ## Building the code mod
 
