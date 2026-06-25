@@ -12,7 +12,7 @@
             <property name="Tags" value="entity,human,npc,trader,graveAliveSurvivor" />
             <property name="Mesh" value="@:Entities/Traders/Prefabs/TraderJoel.prefab"/>
             <property name="Archetype" value="TraderJoel"/>
-            <property name="NPCID" value="gravealive"/>
+            <property name="NPCID" value="traderjoel"/>
             <property name="Faction" value="whiteriver"/>
             <property name="NavObject" value="trader"/>
             <property name="PhysicsBody" value="Human"/>

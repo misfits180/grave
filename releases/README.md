@@ -6,7 +6,7 @@ These files are built against **7 Days to Die V 2.6 (b14)** game assemblies.
 
 - `grave-v0.4.3-7dtd-2.6.zip`
   - Includes updated config files for survivor collision/interactions.
-  - Includes `Config/dialogs.xml` for basic talk prompts.
+  - Uses vanilla trader dialog wiring for compatibility.
 
 ## Quick install (no coding)
 

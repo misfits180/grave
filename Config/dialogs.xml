@@ -1,9 +1,3 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configs>
-    <append xpath="/dialogs">
-        <dialog id="gravealive_intro">
-            <statement id="intro" text="Hey there. I'm just trying to stay alive out here."/>
-            <response id="resp_ok" text="Good to meet you."/>
-        </dialog>
-    </append>
 </configs>
