@@ -92,18 +92,32 @@ namespace GraveAlive.GameIntegration
 
         private Vector3 ResolveSpawnPosition(WorldPosition requestPosition, object world)
         {
-            Vector3 position = new Vector3(requestPosition.X, requestPosition.Y, requestPosition.Z);
             IReadOnlyList<WorldPosition> players = GetPlayerPositions();
-
-            // Seed positions start near world origin with Y=0; convert to offsets from the player.
-            if (players.Count > 0 && requestPosition.Y <= 1f)
+            if (players.Count == 0)
             {
-                WorldPosition anchor = players[0];
-                position = new Vector3(
-                    anchor.X + requestPosition.X,
-                    anchor.Y,
-                    anchor.Z + requestPosition.Z);
+                Vector3 fallbackPosition = new Vector3(requestPosition.X, requestPosition.Y, requestPosition.Z);
+                return SurvivorEntitySetup.SnapToGround(world, fallbackPosition);
             }
+
+            WorldPosition anchor = players[0];
+            float offsetX = requestPosition.X;
+            float offsetZ = requestPosition.Z;
+            double magnitude = Math.Sqrt((offsetX * offsetX) + (offsetZ * offsetZ));
+
+            // Keep spawns close enough to player to avoid mountain/biome edge placements.
+            if (magnitude < 6d)
+            {
+                offsetX = 8f;
+                offsetZ = 0f;
+            }
+            else if (magnitude > 22d)
+            {
+                float scale = (float)(22d / magnitude);
+                offsetX *= scale;
+                offsetZ *= scale;
+            }
+
+            Vector3 position = new Vector3(anchor.X + offsetX, anchor.Y, anchor.Z + offsetZ);
 
             return SurvivorEntitySetup.SnapToGround(world, position);
         }

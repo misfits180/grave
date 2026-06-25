@@ -70,17 +70,18 @@ namespace GraveAlive.GameIntegration
                 return position;
             }
 
-            float height = ReadTerrainHeight(world, position.x, position.z);
-            if (height > 0f)
+            float height;
+            if (TryReadTerrainHeight(world, position.x, position.z, out height))
             {
-                position.y = height + 0.05f;
+                position.y = height + 0.35f;
             }
 
             return position;
         }
 
-        private static float ReadTerrainHeight(object world, float x, float z)
+        private static bool TryReadTerrainHeight(object world, float x, float z, out float height)
         {
+            height = 0f;
             foreach (string methodName in new[] { "GetHeight", "GetTerrainHeight" })
             {
                 MethodInfo method = world.GetType().GetMethod(methodName, BindingFlags.Public | BindingFlags.Instance);
@@ -94,11 +95,12 @@ namespace GraveAlive.GameIntegration
                     parameters[0].ParameterType == typeof(float) &&
                     parameters[1].ParameterType == typeof(float))
                 {
-                    return System.Convert.ToSingle(method.Invoke(world, new object[] { x, z }));
+                    height = System.Convert.ToSingle(method.Invoke(world, new object[] { x, z }));
+                    return true;
                 }
             }
 
-            return 0f;
+            return false;
         }
 
         private static bool HasTag(object entity, string tag)
