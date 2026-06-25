@@ -121,10 +121,11 @@ namespace GraveAlive.GameIntegration
     internal static class GameManagerUpdatePatch
     {
         private static float _lastReportTime;
+        private static bool _disabledDueToError;
 
         private static void Postfix()
         {
-            if (ModApi.IsShuttingDown || ModApi.Runtime == null)
+            if (_disabledDueToError || ModApi.IsShuttingDown || ModApi.Runtime == null)
             {
                 return;
             }
@@ -156,7 +157,8 @@ namespace GraveAlive.GameIntegration
             }
             catch (Exception exception)
             {
-                GameLog.Out("[GraveAlive] Update tick skipped: " + exception.Message);
+                _disabledDueToError = true;
+                GameLog.Out("[GraveAlive] Runtime disabled after exception: " + exception);
             }
         }
     }
