@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml>
+    <Name value="grave" />
+    <DisplayName value="Grave Alive" />
+    <Version value="0.4.0" />
+    <Description value="Adds living-world persistence for survivor NPCs, factions, settlements, and spawn state." />
+    <Author value="Cursor" />
+</xml>
