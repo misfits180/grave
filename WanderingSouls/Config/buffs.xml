@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configs>
+    <append xpath="/buffs">
+        <buff name="buffIsSurvivor" hidden="true">
+            <stack_type value="ignore"/>
+            <effect_group/>
+        </buff>
+    </append>
+</configs>

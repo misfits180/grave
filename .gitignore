@@ -1,0 +1,17 @@
+# Build artifacts
+bin/
+obj/
+*.dll
+*.pdb
+
+# Game binaries (copy locally, do not commit)
+7dtd-binaries/
+
+# IDE
+.vs/
+.idea/
+*.user
+
+# OS
+.DS_Store
+Thumbs.db

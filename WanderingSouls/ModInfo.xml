@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml>
+    <Name value="WanderingSouls"/>
+    <DisplayName value="Wandering Souls"/>
+    <Version value="1.0.0"/>
+    <Description value="Autonomous NPC AI with emotional systems."/>
+    <Author value="Mike"/>
+    <Website value=""/>
+</xml>

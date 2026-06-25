@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configs>
+    <append xpath="/archetypes">
+        <archetype name="WanderingSurvivorArchetype" extends="BaseCharacter" is_random="true">
+            <property name="Gender" value="random"/>
+            <property name="Hair" value="random"/>
+            <property name="SkinColor" value="random"/>
+        </archetype>
+    </append>
+</configs>

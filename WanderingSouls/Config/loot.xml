@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configs>
+    <append xpath="/lootcontainers">
+        <lootcontainer id="9000" count="1" size="8,4" sound_open="UseActions/open_backpack" sound_close="UseActions/close_backpack">
+            <item group="survivorClothes" prob="1"/>
+        </lootcontainer>
+    </append>
+
+    <append xpath="/lootgroups">
+        <lootgroup name="survivorClothes">
+            <item name="clothesShirtTee" prob="20"/>
+            <item name="clothesShirtTank" prob="15"/>
+            <item name="clothesShirtCollege" prob="10"/>
+            <item name="clothesShirtFlannel" prob="10"/>
+            <item name="clothesPantsDenim" prob="20"/>
+            <item name="clothesPantsCargo" prob="15"/>
+            <item name="clothesPantsSweat" prob="10"/>
+            <item name="clothesShoesSneakers" prob="20"/>
+            <item name="clothesShoesBoots" prob="15"/>
+            <item name="clothesShoesDress" prob="5"/>
+            <item name="clothesHatCap" prob="10"/>
+            <item name="clothesHatCowboy" prob="5"/>
+            <item name="clothesHatSkullcap" prob="5"/>
+            <item name="clothesBackpackSmall" prob="10"/>
+            <item name="clothesBackpackMedium" prob="5"/>
+        </lootgroup>
+    </append>
+</configs>

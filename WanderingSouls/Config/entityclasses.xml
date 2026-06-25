@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configs>
+    <append xpath="/entity_classes">
+        <entity_class name="npcWanderingSoul" extends="playerMale">
+            <property name="Class" value="WanderingSouls.EntityWanderingSurvivor, WanderingSouls"/>
+            <property name="Tags" value="entity,npc,human"/>
+            <property name="Faction" value="whiteriver"/>
+            <property name="Buffs" value="buffStatusCheck01,buffStatusCheck02,buffIsSurvivor"/>
+        </entity_class>
+    </append>
+</configs>
