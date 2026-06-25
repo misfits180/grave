@@ -23,12 +23,12 @@ namespace GraveAlive.GameIntegration
             SavePath = Path.Combine(ResolveWritableModDirectory(modInstance), "Saves", "grave-alive-world.xml");
             Runtime = GraveAliveRuntime.LoadOrCreate(settings, Environment.TickCount, SavePath);
             Spawner = new VisibleSurvivorSpawner(settings);
+            AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
 
             _harmony = new Harmony("com.cursor.gravealive");
             _harmony.PatchAll(Assembly.GetExecutingAssembly());
 
             SurvivorChatHandler.Register();
-            ModEvents.GameShutdown.RegisterHandler(OnGameShutdown);
 
             GameLog.Out("[GraveAlive] Living-world simulation initialized.");
             GameLog.Out("[GraveAlive] Save file: " + SavePath);
@@ -36,7 +36,7 @@ namespace GraveAlive.GameIntegration
 
         internal static void SaveNow(string reason)
         {
-            if (IsShuttingDown || Runtime == null || string.IsNullOrEmpty(SavePath))
+            if (Runtime == null || string.IsNullOrEmpty(SavePath))
             {
                 return;
             }
@@ -52,9 +52,9 @@ namespace GraveAlive.GameIntegration
             }
         }
 
-        private static void OnGameShutdown(ref ModEvents.SGameShutdownData data)
+        private static void OnProcessExit(object sender, EventArgs eventArgs)
         {
-            Shutdown("game shutdown");
+            Shutdown("process exit");
         }
 
         internal static void Shutdown(string reason)
@@ -64,8 +64,8 @@ namespace GraveAlive.GameIntegration
                 return;
             }
 
-            IsShuttingDown = true;
             SaveNow(reason);
+            IsShuttingDown = true;
 
             try
             {
